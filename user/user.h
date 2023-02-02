@@ -22,6 +22,11 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+//project 2a add system calls
+int getmem(void);
+char getstate(void);
+int getparentpid(void);
+char* getkstack(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

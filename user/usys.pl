@@ -36,3 +36,7 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
+entry("getmem");
+entry("getstate");
+entry("getparentpid");
+entry("getkstack");

@@ -89,3 +89,35 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+//-----------------------------------------
+//project 2a add system calls
+
+//get the memory size of calling process
+uint64
+sys_getmem(void){
+  uint64 memsize;
+  memsize = myproc()->sz;
+  return memsize;
+}
+
+// returns the current state
+uint64
+sys_getstate(void){
+  return myproc()->state;
+}
+
+// returns the parents pid
+uint64
+sys_getparentpid(void){
+  return myproc()->parent->pid;
+}
+
+//get the address of the stack
+uint64
+sys_getkstack(void){
+  uint64 addr;
+  addr = myproc()->kstack;
+  return addr;
+}
+
