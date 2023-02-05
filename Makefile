@@ -135,6 +135,7 @@ UPROGS=\
 	$U/_hello\
 	$U/_test\
 	$U/_stat\
+	$U/_time\
 	
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)

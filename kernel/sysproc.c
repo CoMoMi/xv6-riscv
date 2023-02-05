@@ -120,4 +120,3 @@ sys_getkstack(void){
   addr = myproc()->kstack;
   return addr;
 }
-
