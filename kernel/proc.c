@@ -316,6 +316,9 @@ fork(void)
 
   pid = np->pid;
 
+// project 5a
+  np->priority = p->priority;
+
   release(&np->lock);
 
   acquire(&wait_lock);

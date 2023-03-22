@@ -129,11 +129,13 @@ uint64
 sys_setpri(void){
   int n;
   argint(0, &n);          //get the priority from the argument
-  myproc()->priority = n;
+ 
 
   if((n < 10 && n > 15) || n == 14){   //check if the priority is valid
     return -1;
   }
+  
+  myproc()->priority = n;
   return 0;
 }
 
