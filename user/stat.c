@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     int status = getstate();
     const char *status_names[] = {"UNUSED", "USED", "SLEEPING", "RUNNABLE", "RUNNING", "ZOMBIE"};
     printf("Process PID:    %d\n", getpid());
+    printf("Priority:    %d\n", getpri());
     printf("Memory Used:    %d\n", getmem());
     printf("Proc State:    %s\n", status_names[status]);
     printf("Uptime (ticks):    %d\n", uptime());

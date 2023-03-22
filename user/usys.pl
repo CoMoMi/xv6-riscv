@@ -40,3 +40,6 @@ entry("getmem");
 entry("getstate");
 entry("getparentpid");
 entry("getkstack");
+#5a project 
+entry("getpri");
+entry("setpri");

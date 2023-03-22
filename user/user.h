@@ -27,6 +27,9 @@ int getmem(void);
 char getstate(void);
 int getparentpid(void);
 char* getkstack(void);
+//project 5a add system calls
+int getpri(void);
+int setpri(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

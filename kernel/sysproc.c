@@ -120,3 +120,22 @@ sys_getkstack(void){
   addr = myproc()->kstack;
   return addr;
 }
+
+//-----------------------------------------
+//project 5a add system calls
+
+//set the priority of the calling process
+uint64
+sys_setpri(void){
+  int n;
+  argint(0, &n);
+  myproc()->priority = n;
+  return 0;
+}
+
+//get the priority of the calling process
+uint64
+sys_getpri(void){
+  return myproc()->priority;
+}
+
