@@ -491,43 +491,54 @@ int wait(uint64 addr)
 //   }
 // }
 
-
-
 // priority scheduling
 void scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
 
-  int priorities[] = {0x0C, 0x0A, 0x0B, 0x0D, 0x0F};
+  int highest_priority = 1000;
 
   c->proc = 0;
 
-  // Find the highest priority process
   for (;;)
   {
-    // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
 
-    for(int i = 0; i < sizeof(priorities) / sizeof(int); i++){
-      for (p = proc; p < &proc[NPROC]; p++)
+    //  loop through all processes and find the highest priority
+    for (p = proc; p < &proc[NPROC]; p++)
+    {
+      acquire(&p->lock);
+      if (p->state == RUNNABLE && p->priority < highest_priority)
       {
-        acquire(&p->lock);
-        //printf("In QUEUE: Process %d has priority %d\n", p->pid, p->priority);
-        if (p->state == RUNNABLE && p->priority == priorities[i])
-        {
-          // switch to the chosen process
-          p->state = RUNNING;
-          c->proc = p;
-          swtch(&c->context, &p->context);
-
-          // Process is done running for now.
-          // It should have changed its p->state before coming back.
-          c->proc = 0;
-        }
-        release(&p->lock);
+        if (highest_priority == 0x0C)
+          highest_priority = 0x0C;
+        else
+          highest_priority = p->priority;
       }
+      if(p->state == RUNNABLE && p->priority == 0x0C)
+        highest_priority = 0x0C;
+      release(&p->lock);
     }
+
+    // loop through all processes and run the highest priority
+    for (p = proc; p < &proc[NPROC]; p++)
+    {
+      acquire(&p->lock);
+      if (p->state == RUNNABLE && p->priority == highest_priority)
+      {
+        p->state = RUNNING;
+        c->proc = p;
+        swtch(&c->context, &p->context);
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+      }
+      release(&p->lock);
+    }
+    // reset highest priority
+    highest_priority = 1000;
   }
 }
 

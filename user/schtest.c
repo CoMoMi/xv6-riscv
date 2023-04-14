@@ -26,9 +26,9 @@ int main(int argc, char *argv[])
     int pid;
     //int status;
     
-    int children[5] = {0x0A, 0x0A, 0x0A, 0x0A, 0x0C};
+    int children[10] = {0x0A, 0x0D, 0x0C, 0x0A, 0x0F, 0x0A, 0x0A, 0x0F, 0x0A, 0x0C};
     // fork 10 children
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
         pid = fork();
         
         if (pid < 0)
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
             //     exit(1);
             // }
             setpri(children[i]);
-            sleep(1);
+            sleep(5);
             do_work(i, children[i]);
 
             //printf("Process %d finished (priority %d)\n", i, getpri());
