@@ -128,14 +128,17 @@ sys_getkstack(void){
 uint64
 sys_setpri(void){
   int n;
+
   argint(0, &n);          //get the priority from the argument
  
 
-  if((n < 10 && n > 15) || n == 14){   //check if the priority is valid
+  if(n != 0x0A && n != 0x0B && n != 0x0C && n != 0x0D && n != 0x0F){   //check if the priority is valid
     return -1;
   }
   
+  //acquire(&p->lock);
   myproc()->priority = n;
+  //release(&p->lock);
   return 0;
 }
 
