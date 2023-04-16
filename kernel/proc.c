@@ -496,14 +496,16 @@ void scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
-
-  int highest_priority = 1000;
-
+  
   c->proc = 0;
 
   for (;;)
   {
     intr_on();
+
+    // start with the highest possible pid and priority
+    int lowest_pid = 0x7fffffff;
+    int highest_priority = 0x7fffffff;
 
     //  loop through all processes and find the highest priority
     for (p = proc; p < &proc[NPROC]; p++)
@@ -511,13 +513,16 @@ void scheduler(void)
       acquire(&p->lock);
       if (p->state == RUNNABLE && p->priority < highest_priority)
       {
-        if (highest_priority == 0x0C)
-          highest_priority = 0x0C;
-        else
-          highest_priority = p->priority;
+        highest_priority = p->priority;
+        lowest_pid = p->pid;
       }
-      if(p->state == RUNNABLE && p->priority == 0x0C)
+      // finds first 0x0C priority, breaks out of loop
+      if(p->state == RUNNABLE && p->priority == 0x0C){
         highest_priority = 0x0C;
+        lowest_pid = p->pid;
+        release(&p->lock);
+        break;
+      }
       release(&p->lock);
     }
 
@@ -525,7 +530,9 @@ void scheduler(void)
     for (p = proc; p < &proc[NPROC]; p++)
     {
       acquire(&p->lock);
-      if (p->state == RUNNABLE && p->priority == highest_priority)
+      // execute the highest priority
+      // if the priority is the same execute the lowest pid
+      if (p->state == RUNNABLE && p->priority == highest_priority && p->pid == lowest_pid)
       {
         p->state = RUNNING;
         c->proc = p;
@@ -537,8 +544,6 @@ void scheduler(void)
       }
       release(&p->lock);
     }
-    // reset highest priority
-    highest_priority = 1000;
   }
 }
 
