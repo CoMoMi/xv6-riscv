@@ -480,6 +480,7 @@ int wait(uint64 addr)
 //         // before jumping back to us.
 //         p->state = RUNNING;
 //         c->proc = p;
+//         printf("scheduler: pid %d, priority %d\n", p->pid, p->priority);
 //         swtch(&c->context, &p->context);
 
 //         // Process is done running for now.
@@ -491,7 +492,7 @@ int wait(uint64 addr)
 //   }
 // }
 
-// priority scheduling
+//priority scheduling
 void scheduler(void)
 {
   struct proc *p;
@@ -503,8 +504,7 @@ void scheduler(void)
   {
     intr_on();
 
-    // start with the highest possible pid and priority
-    int lowest_pid = 0x7fffffff;
+    // start with the highest possible priority
     int highest_priority = 0x7fffffff;
 
     //  loop through all processes and find the highest priority
@@ -512,14 +512,11 @@ void scheduler(void)
     {
       acquire(&p->lock);
       if (p->state == RUNNABLE && p->priority < highest_priority)
-      {
         highest_priority = p->priority;
-        lowest_pid = p->pid;
-      }
+    
       // finds first 0x0C priority, breaks out of loop
       if(p->state == RUNNABLE && p->priority == 0x0C){
         highest_priority = 0x0C;
-        lowest_pid = p->pid;
         release(&p->lock);
         break;
       }
@@ -531,8 +528,7 @@ void scheduler(void)
     {
       acquire(&p->lock);
       // execute the highest priority
-      // if the priority is the same execute the lowest pid
-      if (p->state == RUNNABLE && p->priority == highest_priority && p->pid == lowest_pid)
+      if (p->state == RUNNABLE && p->priority == highest_priority)
       {
         p->state = RUNNING;
         c->proc = p;
